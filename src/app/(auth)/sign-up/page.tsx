@@ -14,8 +14,8 @@ import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 
 import {
-  AuthCredentialsValidator,
-  TAuthCredentialsValidator,
+  AuthCredentialsValidatorRegister,
+  TAuthCredentialsValidatorRegister,
 } from '@/lib/validators/account-credentials-validator'
 import { trpc } from '@/trpc/client'
 import { toast } from 'sonner'
@@ -27,8 +27,8 @@ const Page = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TAuthCredentialsValidator>({
-    resolver: zodResolver(AuthCredentialsValidator),
+  } = useForm<TAuthCredentialsValidatorRegister>({
+    resolver: zodResolver(AuthCredentialsValidatorRegister),
   })
 
   const router = useRouter()
@@ -65,8 +65,11 @@ const Page = () => {
   const onSubmit = ({
     email,
     password,
-  }: TAuthCredentialsValidator) => {
-    mutate({ email, password })
+    name, 
+    number
+  }: TAuthCredentialsValidatorRegister) => {
+    // console.log("handle submit data : ", email, password, name, number);
+    mutate({ email, password, name, number})
   }
 
   return (
@@ -93,6 +96,38 @@ const Page = () => {
           <div className='grid gap-6'>
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className='grid gap-2'>
+                <div className='grid gap-1 py-2'>
+                  <Label htmlFor='name'>Name</Label>
+                  <Input
+                    {...register('name')}
+                    className={cn({
+                      'focus-visible:ring-red-500':
+                        errors.name,
+                    })}
+                    placeholder='devarshee'
+                  />
+                  {errors?.name && (
+                    <p className='text-sm text-red-500'>
+                      {errors.name.message}
+                    </p>
+                  )}
+                </div>
+                <div className='grid gap-1 py-2'>
+                  <Label htmlFor='number'>Phone Number</Label>
+                  <Input
+                    {...register('number')}
+                    className={cn({
+                      'focus-visible:ring-red-500':
+                        errors.number,
+                    })}
+                    placeholder='8780280085'
+                  />
+                  {errors?.number && (
+                    <p className='text-sm text-red-500'>
+                      {errors.number.message}
+                    </p>
+                  )}
+                </div>
                 <div className='grid gap-1 py-2'>
                   <Label htmlFor='email'>Email</Label>
                   <Input

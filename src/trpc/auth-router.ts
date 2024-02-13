@@ -1,4 +1,4 @@
-import { AuthCredentialsValidator } from '../lib/validators/account-credentials-validator'
+import { AuthCredentialsValidator, AuthCredentialsValidatorRegister} from '../lib/validators/account-credentials-validator'
 import { publicProcedure, router } from './trpc'
 import { getPayloadClient } from '../get-payload'
 import { TRPCError } from '@trpc/server'
@@ -6,9 +6,10 @@ import { z } from 'zod'
 
 export const authRouter = router({
   createPayloadUser: publicProcedure
-    .input(AuthCredentialsValidator)
+    .input(AuthCredentialsValidatorRegister)
     .mutation(async ({ input }) => {
-      const { email, password } = input
+      console.log("under auth router input : ", input);
+      const { email, password, name, number} = input
       const payload = await getPayloadClient()
 
       // check if user already exists
@@ -24,11 +25,15 @@ export const authRouter = router({
       if (users.length !== 0)
         throw new TRPCError({ code: 'CONFLICT' })
 
+
+      console.log(name, number, email, password)
       await payload.create({
         collection: 'users',
         data: {
           email,
           password,
+          name,
+          number,
           role: 'user',
         },
       })
