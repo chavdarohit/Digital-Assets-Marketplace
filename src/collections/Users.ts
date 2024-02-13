@@ -16,6 +16,7 @@ export const Users: CollectionConfig = {
   auth: {
     verify: {
       generateEmailHTML: ({ token }) => {
+        console.log("here in generateEmailHTML : ");
         return PrimaryActionEmailHtml({
           actionLabel: "verify your account",
           buttonText: "Verify Account",
@@ -35,6 +36,18 @@ export const Users: CollectionConfig = {
     defaultColumns: ['id'],
   },
   fields: [
+    {
+      name: 'name',
+      label: 'Name',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'number',
+      label: 'Phone Number',
+      type: 'text',
+      required: true,
+    },
     {
       name: 'products',
       label: 'Products',
