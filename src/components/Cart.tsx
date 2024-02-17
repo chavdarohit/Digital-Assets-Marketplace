@@ -113,7 +113,8 @@ const Cart = () => {
             </div>
             <SheetTrigger asChild>
               <Link
-                href='/products'
+                // href='/products'
+                href='/'
                 className={buttonVariants({
                   variant: 'link',
                   size: 'sm',

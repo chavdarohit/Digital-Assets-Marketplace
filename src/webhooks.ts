@@ -97,6 +97,7 @@ export const stripeWebhookHandler = async (
         },
       },
     })
+    console.log("here after updating order data ");
 
     // send receipt
     try {
@@ -140,6 +141,9 @@ export const stripeWebhookHandler = async (
       res.status(500).json({ error })
     }
   }
+
+
+  console.log("here in devarshee");
 
   return res.status(200).send()
 }

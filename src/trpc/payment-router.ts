@@ -76,6 +76,9 @@ export const paymentRouter = router({
             line_items,
           })
 
+
+          console.log("here after stripe session :.......");
+
         return { url: stripeSession.url }
       } catch (err) {
         console.log("here in err");
