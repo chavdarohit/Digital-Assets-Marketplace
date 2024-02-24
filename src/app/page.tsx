@@ -51,8 +51,7 @@ export default function Home() {
           </p>
           <div className='flex flex-col sm:flex-row gap-4 mt-6'>
             <Link
-              // href='/products'
-              href='/'
+              href='/products'
               className={buttonVariants()}>
               Browse Trending
             </Link>

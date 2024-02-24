@@ -1,3 +1,4 @@
+
 import Link from 'next/link'
 import MaxWidthWrapper from './MaxWidthWrapper'
 import { Icons } from './Icons'
@@ -12,6 +13,9 @@ import MobileNav from './MobileNav'
 const Navbar = async () => {
   const nextCookies = cookies()
   const { user } = await getServerSideUser(nextCookies)
+
+
+  console.log("here in user : ", user);
 
   return (
     <div className='bg-white sticky z-50 top-0 inset-x-0 h-16'>

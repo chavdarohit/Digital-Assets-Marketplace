@@ -43,8 +43,12 @@ const UserAccountNav = ({ user }: { user: User }) => {
 
         <DropdownMenuItem asChild>
           <Link 
-          // href='/sell'
-          href='/'
+          href={`/user/${user.id}`}
+          >Profile</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link 
+          href='/sell'
           >Seller Dashboard</Link>
         </DropdownMenuItem>
 
