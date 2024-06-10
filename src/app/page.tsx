@@ -1,27 +1,31 @@
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import ProductReel from "@/components/ProductReel";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { ArrowDownToLine, CheckCircle, Leaf } from "lucide-react";
+import {
+  ArrowDownToLine,
+  CheckCircle,
+  HeartHandshake,
+  Leaf,
+} from "lucide-react";
 import Link from "next/link";
 
 const perks = [
   {
     name: "Instant Delivery",
     Icon: ArrowDownToLine,
-    description:
-      "Get your assets delivered to your email in seconds and download them right away.",
+    description: "Download the asset right away after successful order.",
   },
   {
     name: "Guaranteed Quality",
     Icon: CheckCircle,
     description:
-      "Every asset on our platform is verified by our team to ensure our highest quality standards. Not happy? We offer a 30-day refund guarantee.",
+      "Every asset on our platform is verified by the team to ensure highest quality.",
   },
   {
-    name: "For the Planet",
-    Icon: Leaf,
+    name: "Centralized Platform",
+    Icon: HeartHandshake,
     description:
-      "We've pledged 1% of sales to the preservation and restoration of the natural environment.",
+      "Transforming the digital marketplace with a centralized platform that changes how creators monetize and consumers access digital content.",
   },
 ];
 
