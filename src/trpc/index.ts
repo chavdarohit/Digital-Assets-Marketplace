@@ -19,7 +19,7 @@ export const appRouter = router({
     )
     .query(async ({ input }) => {
       const { query, cursor } = input
-      const { sort, limit, ...queryOpts } = query
+      const { sort, limit, search, category, ...queryOpts } = query
 
       const payload = await getPayloadClient()
 
@@ -28,9 +28,14 @@ export const appRouter = router({
         { equals: string }
       > = {}
 
+      
+
       Object.entries(queryOpts).forEach(([key, value]) => {
-        parsedQueryOpts[key] = {
-          equals: value,
+        if(typeof value === 'string'){
+          parsedQueryOpts[key] = {
+            equals: value,
+          }
+
         }
       })
 
@@ -42,10 +47,18 @@ export const appRouter = router({
         nextPage,
       } = await payload.find({
         collection: 'products',
+
         where: {
           approvedForSale: {
             equals: 'approved',
           },
+          ...(search ? { name: {
+            contains: search.toString()
+          },
+          description:{
+            contains: search.toString()
+          }} :{}),
+          ...(category && { category: { equals: category } }),
           ...parsedQueryOpts,
         },
         sort,

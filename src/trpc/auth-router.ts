@@ -9,7 +9,7 @@ export const authRouter = router({
     .input(AuthCredentialsValidatorRegister)
     .mutation(async ({ input }) => {
       console.log("under auth router input : ", input);
-      const { email, password, name, number} = input
+      const { email, password, name, number, role} = input
       const payload = await getPayloadClient()
 
       // check if user already exists
@@ -34,7 +34,7 @@ export const authRouter = router({
           password,
           name,
           number,
-          role: 'user',
+          role,
         },
       })
 
@@ -68,7 +68,7 @@ export const authRouter = router({
       const payload = await getPayloadClient()
 
       try {
-        await payload.login({
+        const t = await payload.login({
           collection: 'users',
           data: {
             email,
@@ -77,7 +77,9 @@ export const authRouter = router({
           res,
         })
 
-        return { success: true }
+        console.log("res is : ", res, t);
+
+        return { success: true, data:t}
       } catch (err) {
         throw new TRPCError({ code: 'UNAUTHORIZED' })
       }

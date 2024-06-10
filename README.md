@@ -1,7 +1,6 @@
-# DigiBytes - A Modern Fullstack E-Commerce Marketplace for Digital Products
+# Digital Assets Marketplace - A Modern Fullstack E-Commerce Marketplace for Digital Products
 
 Built with the Next.js 14 App Router, tRPC, TypeScript, Payload & Tailwind
-
 
 ## Features
 
@@ -23,8 +22,4 @@ Built with the Next.js 14 App Router, tRPC, TypeScript, Payload & Tailwind
 
 To get started with this project, run
 
-
 and copy the .env.example variables into a separate .env file, fill them out & and that's all you need to get started!
-
-
-

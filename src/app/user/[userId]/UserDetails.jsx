@@ -1,69 +1,82 @@
 "use client";
+import { Label } from "@radix-ui/react-dropdown-menu";
 import axios from "axios";
+import { Input } from "@/components/ui/input";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 
 const UserDetails = ({ userId }) => {
   const [userDetails, setUserDetails] = useState(null);
+
   const getUserDetails = async () => {
-    const data = await axios.get(`http://localhost:5000/user/${userId}`);
-    setUserDetails(data?.data?.data);
+    const data = await axios.get(`http://localhost:5001/user/${userId}`);
+    console.log("here in data : ", data);
+    setUserDetails(data?.data?.user);
   };
+
   useEffect(() => {
     getUserDetails();
   }, []);
+
   return (
-    <div>
+    <>
       {userDetails ? (
-        <>
-          <div class="bg-white overflow-hidden shadow rounded-lg border">
-            <div class="px-4 py-5 sm:px-6">
-              <h3 class="text-lg leading-6 font-medium text-gray-900">
-                User Profile
-              </h3>
-              <p class="mt-1 max-w-2xl text-sm text-gray-500">
-                This is some information about the user.
-              </p>
+        <div className="container relative flex pt-4 pb-4 flex-col items-center justify-center lg:px-0">
+          <div className="mx-auto flex w-full flex-col justify-center space-y-4 sm:w-[350px]">
+            <div className="flex flex-col items-center text-center">
+              <h1 className="text-2xl font-semibold tracking-tight">Profile</h1>
             </div>
-            <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
-              <dl class="sm:divide-y sm:divide-gray-200">
-                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                  <dt class="text-sm font-medium text-gray-500">Name</dt>
-                  <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                    {userDetails?.name}
-                  </dd>
+
+            <div className="grid gap-6">
+              <form>
+                <div className="grid gap-2">
+                  <div className="grid gap-1 py-2">
+                    <Label htmlFor="name">Name</Label>
+                    <Input value={userDetails?.name} disabled />
+                  </div>
+                  <div className="grid gap-1 py-2">
+                    <Label htmlFor="number">Phone Number</Label>
+                    <Input value={userDetails?.number} disabled />
+                  </div>
+                  <div className="grid gap-1 py-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input value={userDetails?.email} disabled />
+                  </div>
+
+                  <div className="grid gap-1 py-2">
+                    <Label htmlFor="email">Role</Label>
+                    <Input value={userDetails?.role} disabled />
+                  </div>
                 </div>
-                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                  <dt class="text-sm font-medium text-gray-500">
-                    Email address
-                  </dt>
-                  <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                    {userDetails?.email}
-                  </dd>
-                </div>
-                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                  <dt class="text-sm font-medium text-gray-500">
-                    Phone number
-                  </dt>
-                  <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                    {userDetails?.number}
-                  </dd>
-                </div>
-                <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                  <dt class="text-sm font-medium text-gray-500">Role</dt>
-                  <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                    {userDetails?.role}
-                  </dd>
-                </div>
-              </dl>
+              </form>
             </div>
           </div>
-        </>
+        </div>
       ) : (
-        <div>Loading...</div>
+        <div className="container relative flex pt-4 pb-4 flex-col items-center justify-center lg:px-0">
+          <div className="bg-white rounded-lg shadow-md p-4 animate-pulse justify-center	align-middle	">
+            <div
+              className="w-64 h-8 bg-gray-300 rounded mb-2"
+              style={{ margin: "20px", width: "500px" }}
+            ></div>
+
+            <div
+              className="w-full h-6 bg-gray-300 rounded mb-2"
+              style={{ margin: "20px", width: "500px" }}
+            ></div>
+            <div
+              className="w-full h-6 bg-gray-300 rounded mb-2"
+              style={{ margin: "20px", width: "500px" }}
+            ></div>
+            <div
+              className="w-full h-6 bg-gray-300 rounded"
+              style={{ margin: "20px", width: "500px" }}
+            ></div>
+          </div>
+        </div>
       )}
-    </div>
+    </>
   );
 };
 

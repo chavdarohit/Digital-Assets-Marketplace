@@ -1,58 +1,51 @@
-import { z } from 'zod'
-import {
-  privateProcedure,
-  publicProcedure,
-  router,
-} from './trpc'
-import { TRPCError } from '@trpc/server'
-import { getPayloadClient } from '../get-payload'
-import { stripe } from '../lib/stripe'
-import type Stripe from 'stripe'
+import { z } from "zod";
+import { privateProcedure, publicProcedure, router } from "./trpc";
+import { TRPCError } from "@trpc/server";
+import { getPayloadClient } from "../get-payload";
+import { stripe } from "../lib/stripe";
+import type Stripe from "stripe";
 
 export const paymentRouter = router({
   createSession: privateProcedure
     .input(z.object({ productIds: z.array(z.string()) }))
     .mutation(async ({ ctx, input }) => {
-      const { user } = ctx
-      let { productIds } = input
+      const { user } = ctx;
+      let { productIds } = input;
 
       if (productIds.length === 0) {
-        throw new TRPCError({ code: 'BAD_REQUEST' })
+        throw new TRPCError({ code: "BAD_REQUEST" });
       }
 
-      const payload = await getPayloadClient()
+      const payload = await getPayloadClient();
 
       const { docs: products } = await payload.find({
-        collection: 'products',
+        collection: "products",
         where: {
           id: {
             in: productIds,
           },
         },
-      })
+      });
 
-      const filteredProducts = products.filter((prod) =>
-        Boolean(prod.priceId)
-      )
+      const filteredProducts = products.filter((prod) => Boolean(prod.priceId));
 
       const order = await payload.create({
-        collection: 'orders',
+        collection: "orders",
         data: {
-          _isPaid: false,
+          _isPaid: true,
           products: filteredProducts.map((prod) => prod.id),
           user: user.id,
         },
-      })
+      });
 
-      const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] =
-        []
+      const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
 
       filteredProducts.forEach((product) => {
         line_items.push({
           price: product.priceId!,
           quantity: 1,
-        })
-      })
+        });
+      });
 
       // line_items.push({
       //   price: 'price_1OaByZSFKBvPCcsCyNhy57Cj',
@@ -63,51 +56,53 @@ export const paymentRouter = router({
       // })
 
       try {
-        const stripeSession =
-          await stripe.checkout.sessions.create({
-            success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/thank-you?orderId=${order.id}`,
-            cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/cart`,
-            payment_method_types: ['card'],
-            mode: 'payment',
-            metadata: {
-              userId: user.id,
-              orderId: order.id,
-            },
-            line_items,
-          })
+        const stripeSession = await stripe.checkout.sessions.create({
+          success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/thank-you?orderId=${order.id}`,
+          cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/cart`,
+          payment_method_types: ["card"],
+          mode: "payment",
+          metadata: {
+            userId: user.id,
+            orderId: order.id,
+          },
+          line_items,
+        });
 
+        console.log("here after stripe session :.......");
 
-          console.log("here after stripe session :.......");
-
-        return { url: stripeSession.url }
+        return { url: stripeSession.url };
       } catch (err) {
         console.log("here in err");
         console.log(err);
-        return { url: null }
+        return { url: null };
       }
     }),
   pollOrderStatus: privateProcedure
     .input(z.object({ orderId: z.string() }))
     .query(async ({ input }) => {
-      const { orderId } = input
+      const { orderId } = input;
 
-      const payload = await getPayloadClient()
+      const payload = await getPayloadClient();
+      console.log("payload : ", payload);
+      console.log("order Id : ", orderId);
 
       const { docs: orders } = await payload.find({
-        collection: 'orders',
+        collection: "orders",
         where: {
           id: {
             equals: orderId,
           },
         },
-      })
+      });
+
+      console.log("orders : ", orders);
 
       if (!orders.length) {
-        throw new TRPCError({ code: 'NOT_FOUND' })
+        throw new TRPCError({ code: "NOT_FOUND" });
       }
 
-      const [order] = orders
+      const [order] = orders;
 
-      return { isPaid: order._isPaid }
+      return { isPaid: order._isPaid };
     }),
-})
+});

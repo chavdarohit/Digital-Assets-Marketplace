@@ -213,6 +213,7 @@ const Page = () => {
                 onClick={() =>
                   createCheckoutSession({ productIds })
                 }
+                
                 className='w-full'
                 size='lg'>
                 {isLoading ? (

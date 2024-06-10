@@ -2,12 +2,15 @@ import AddToCartButton from '@/components/AddToCartButton'
 import ImageSlider from '@/components/ImageSlider'
 import MaxWidthWrapper from '@/components/MaxWidthWrapper'
 import ProductReel from '@/components/ProductReel'
+import ProductReviews from '../../../components/ProductReviews'
 import { PRODUCT_CATEGORIES } from '@/config'
 import { getPayloadClient } from '@/get-payload'
 import { formatPrice } from '@/lib/utils'
 import { Check, Shield } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { cookies } from 'next/headers'
+import { getServerSideUser } from '@/lib/payload-utils'
 
 interface PageProps {
   params: {
@@ -21,6 +24,9 @@ const BREADCRUMBS = [
 ]
 
 const Page = async ({ params }: PageProps) => {
+  const nextCookies = cookies()
+
+  const { user } = await getServerSideUser(nextCookies)
   const { productId } = params
 
   const payload = await getPayloadClient()
@@ -131,13 +137,13 @@ const Page = async ({ params }: PageProps) => {
               </div>
               <div className='mt-6 text-center'>
                 <div className='group inline-flex text-sm text-medium'>
-                  <Shield
+                  {/* <Shield
                     aria-hidden='true'
                     className='mr-2 h-5 w-5 flex-shrink-0 text-gray-400'
-                  />
-                  <span className='text-muted-foreground hover:text-gray-700'>
+                  /> */}
+                  {/* <span className='text-muted-foreground hover:text-gray-700'>
                     30 Day Return Guarantee
-                  </span>
+                  </span> */}
                 </div>
               </div>
             </div>
@@ -145,12 +151,15 @@ const Page = async ({ params }: PageProps) => {
         </div>
       </div>
 
+      {/* {console.log("user id : ", user)} */}
+
       <ProductReel
         href='/products'
         query={{ category: product.category, limit: 4 }}
         title={`Similar ${label}`}
         subtitle={`Browse similar high-quality ${label} just like '${product.name}'`}
       />
+      <ProductReviews productId={productId} userId={user?.id.toString()}/>
     </MaxWidthWrapper>
   )
 }

@@ -5,6 +5,7 @@ import { Product } from '@/payload-types'
 import { trpc } from '@/trpc/client'
 import Link from 'next/link'
 import ProductListing from './ProductListing'
+import { useState } from 'react'
 
 interface ProductReelProps {
   title: string
@@ -18,11 +19,18 @@ const FALLBACK_LIMIT = 4
 const ProductReel = (props: ProductReelProps) => {
   const { title, subtitle, href, query } = props
 
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+
   const { data: queryResults, isLoading } =
     trpc.getInfiniteProducts.useInfiniteQuery(
       {
         limit: query.limit ?? FALLBACK_LIMIT,
-        query,
+        query: {
+          ...query,
+          search: searchQuery,
+          category: selectedCategory
+        },
       },
       {
         getNextPageParam: (lastPage) => lastPage.nextPage,
@@ -33,6 +41,7 @@ const ProductReel = (props: ProductReelProps) => {
     (page) => page.items
   )
 
+  console.log("this is our query : ", query);
   let map: (Product | null)[] = []
   if (products && products.length) {
     map = products
@@ -41,6 +50,17 @@ const ProductReel = (props: ProductReelProps) => {
       query.limit ?? FALLBACK_LIMIT
     ).fill(null)
   }
+
+
+  
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedCategory(e.target.value);
+  };
+  
 
   return (
     <section className='py-12'>
@@ -67,6 +87,30 @@ const ProductReel = (props: ProductReelProps) => {
           </Link>
         ) : null}
       </div>
+
+      
+
+      {
+        window?.location?.pathname?.includes("products") ? <div className='flex items-center w-full mb-4'>
+        <input
+          type='text'
+          placeholder='Search products...'
+          value={searchQuery}
+          onChange={handleSearch}
+          className='border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500'
+        />
+        <select
+          value={selectedCategory}
+          onChange={handleCategoryChange}
+          className='ml-2 border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-500'
+        >
+          <option value=''>All Categories</option>
+          <option value='icons'>Icons</option>
+          <option value='themes'>Theme</option>
+          <option value='ui_kits'>UI Kits</option>
+        </select>
+      </div>:null
+      }
 
       <div className='relative'>
         <div className='mt-6 flex items-center w-full'>
