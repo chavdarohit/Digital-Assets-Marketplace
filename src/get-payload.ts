@@ -4,6 +4,8 @@ import type { InitOptions } from "payload/config";
 import payload, { Payload } from "payload";
 import nodemailer from "nodemailer";
 
+//This file is made for initializing the payload and getting the configuration
+
 dotenv.config({
   path: path.resolve(__dirname, "../.env"),
 });
@@ -20,6 +22,7 @@ const transporter = nodemailer.createTransport({
 
 let cached = (global as any).payload;
 
+// if there is configuration in cache we are taking from it otherwise taking from the payload and putting in the cache
 if (!cached) {
   cached = (global as any).payload = {
     client: null,

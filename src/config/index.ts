@@ -1,3 +1,4 @@
+//this is are the navbar buttons array for navigating easily
 export const PRODUCT_CATEGORIES = [
   {
     label: "UI Kits",

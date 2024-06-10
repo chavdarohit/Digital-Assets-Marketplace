@@ -10,6 +10,7 @@ import { Media } from "./collections/Media";
 import { ProductFiles } from "./collections/ProductFile";
 import { Orders } from "./collections/Orders";
 
+// this file is making for the configuration for the payload
 dotenv.config({
   path: path.resolve(__dirname, "../.env"),
 });
@@ -32,7 +33,7 @@ export default buildConfig({
   rateLimit: {
     max: 2000,
   },
-  editor: slateEditor({}),
+  editor: slateEditor({}), // we can use both editors slate and the lexical
   db: mongooseAdapter({
     url: process.env.MONGODB_URL!,
   }),
